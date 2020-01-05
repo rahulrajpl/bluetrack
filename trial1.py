@@ -11,8 +11,8 @@ from collections import deque
 # Y = deque(maxlen=20)
 X = []
 Y = []
-X.append(random.uniform(1,100))
-Y.append(random.uniform(1,100))
+X.append(random.uniform(50,60))
+Y.append(random.uniform(50,55))
 
 app = dash.Dash(__name__)
 app.layout = html.Div([
