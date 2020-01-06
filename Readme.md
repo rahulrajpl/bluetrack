@@ -13,3 +13,4 @@ Stage 2: (3D live plotting)
 
     [1] https://community.plot.ly
     [2] https://pythonprogramming.net/live-graphs-data-visualization-application-dash-python-tutorial/ (via @Sentdex )
+    [3] https://www.youtube.com/watch?v=Ercd-Ip5PfQ (Matplotlib code)
