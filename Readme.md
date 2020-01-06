@@ -2,8 +2,12 @@
 
 Present Target: Dynamic realtime plotting of sensor data from OBLU device to a web based GUI using plotly/dash 
 
-SneakPeak:
+Stage 1: (2D live plotting)
 ![link](docs/Peek1.gif)
+
+Stage 2: (3D live plotting)
+![link](docs/Peek2.gif)
+
 
 #### References
 
