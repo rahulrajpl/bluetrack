@@ -63,27 +63,40 @@ def update_graph(n):
     Y.append(Y[-1]+(random.uniform(-5,5)))
     Z.append(Z[-1]+(random.uniform(-5,5)))
 
-    # data = go.
+    # data = px.scatter_3d(
+    #     x = list(X),
+    #     y = list(Y),
+    #     z = list(Z),
+    #     name = 'Scatter',
+    #     mode = 'lines+markers'
+    # )
 
-    data = px.scatter_3d(
-        x = list(X),
-        y = list(Y),
-        z = list(Z),
-        name = 'Scatter',
-        mode = 'lines+markers'
-    )
+    # figure={
+    #         'data' : [data],
+    #         'layout': go.Layout(xaxis=dict(range=[1, 100]),
+    #                             yaxis=dict(range=[1, 100]),
+    #                             )
+    #     }
+    #     )
 
-    figure={
-            'data' : [data],
-            'layout': go.Layout(xaxis=dict(range=[1, 100]),
-                                yaxis=dict(range=[1, 100]),
-                                )
-        }
-    # fig = px.scatter_3d(data_frame=[data],
-    #         x='X_label',y='Y_label', z='Z_label',
-    #         )
+    # return figure
 
-    return figure
+    fig = plotly.tools.make_subplots(rows=1, cols=1, vertical_spacing=0.2)
+    fig['layout']['margin'] = {
+        'l': 30, 'r': 10, 'b': 30, 't': 10
+    }
+    fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
+
+    fig.append_trace({
+        'x': list(X),
+        'y': list(Y),
+        'z': list(Z),
+        'name': 'ObluTrace',
+        'mode': 'lines+markers',
+        'type': 'scatter3d'
+    }, 1, 1)
+
+    return fig
 
 if __name__ == '__main__':
     app.run_server(debug=True)
