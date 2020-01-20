@@ -30,8 +30,8 @@ while True:
         x_value += 1
         
         # if total_1 < 80 or total_2 < 80:
-        total_1 += random.randint(0, 2)
-        total_2 += random.randint(0, 2)
+        total_1 += random.randint(0, 1)
+        total_2 += random.randint(0, 1)
         total_3 += random.randint(0, 2)
         # else:
         #     total_1 = 1
