@@ -42,13 +42,8 @@ import sys
 import traceback
 import thread
 
-# device_ip = '172.31.5.214'
-# device_ip = '192.168.43.201'
-# device_ip = '192.168.1.5'
-
-
-device_ip = '172.27.22.120' # Static IP for No 149
-# device_ip = '172.27.22.57' # Static IP for No 145
+# device_ip = '172.27.18.225' # No 145
+device_ip = '172.27.18.226' # No 149
 
 MAX_CMD_LENGTH = 6
 ACK_LEN = 4
@@ -73,7 +68,7 @@ def monitorUserCmd():
                 for line in f:
                     if len(line.strip()) > 0:
                         command = line.strip().split()
-                        print "Command received : " + line.strip()
+                        print("Command received : " + line.strip())
                         break
         except IOError:
             pass
@@ -91,7 +86,7 @@ def putDataToCloud(data_queue):
         while not data_queue.empty():
             data =  data_queue.get()
             # Put data to Firebase Database
-            print data
+            print(data)
             ##############################################
             data_queue.task_done()
         time.sleep(1)
@@ -117,7 +112,7 @@ class DeviceClient(threading.Thread):
         self.prev_z = 0
 
     def open_device(self, host, port):
-        print "Connecting to device", host
+        print("Connecting to device", host)
         client_socket = socket.socket()
         client_socket.connect((host, port))  # connect to the server
         return client_socket
@@ -146,7 +141,7 @@ class DeviceClient(threading.Thread):
                 isSendData = True
             except socket.error:
                 isSendData = False
-                print "write_device: Sending Failure"
+                print("write_device: Sending Failure")
                 if self.IsDeviceActive() == False:
                     raise DeviceConnectivityError("Device is not active")
 
@@ -169,7 +164,7 @@ class DeviceClient(threading.Thread):
             return valid, pkt_info, payload
         except Exception as ex:
             s1 = device_data.encode("hex")
-            print "Exception in parsing: " + ex.message + "\n, data="+s1
+            print("Exception in parsing: " + ex.message + "\n, data="+s1)
             # elif re.search(b'[\d|\w]+aa.*', s1):  # search and find new packet
             lst = re.findall(b'[\d|\w]+(aa.*)', s1)
 
@@ -300,23 +295,23 @@ class DeviceClient(threading.Thread):
             if self.client_socket :
                 self.client_socket.close()
         except Exception as ex:
-            print "Socket Closing Error ",str(ex)
+            print("Socket Closing Error ",str(ex))
 
         sys.stdout.write("Waiting for reconnection")
         while self.IsDeviceActive() == False:
             sys.stdout.write('.')
         sys.stdout.flush()
-        print "."
+        print(".")
 
         try:
             self.client_socket = self.open_device(self.host, self.port)
             self.client_socket.settimeout(TIME_OUT)
-            print "Send last ack=", self.last_ack.encode("hex")
+            print("Send last ack=", self.last_ack.encode("hex"))
 
             self.write_device(self.last_ack)
             # self.sendStartCmd()
         except socket.error as ex:
-            print "Reconnection: Exception on device connectivity " , str(ex.message)
+            print("Reconnection: Exception on device connectivity " , str(ex.message))
             self.reconnection()
 
     def sendStartCmd(self):
@@ -324,7 +319,7 @@ class DeviceClient(threading.Thread):
         try:
             ack = self.read_device(ACK_LEN)
         except DeviceConnectivityError as e:
-            print "Exception on first ack : " + str(e)
+            print("Exception on first ack : " + str(e))
             return
         self.chk_ack(ack)
 
@@ -334,11 +329,11 @@ class DeviceClient(threading.Thread):
             self.client_socket = self.open_device(self.host, self.port)
             if self.client_socket:  # if btserial is not null:
                 # global TIME_OUT
-                print self.host, self.port, self.outfile
+                print(self.host, self.port, self.outfile)
                 self.write_file_hdr()
                 cmd = START_CMD.decode("hex")
                 self.write_device(cmd)
-                print "Send Start Command: ", START_CMD
+                print("Send Start Command: ", START_CMD)
                 self.client_socket.settimeout(TIME_OUT)
                 count = 0
                 num_pkts = 0
@@ -351,7 +346,7 @@ class DeviceClient(threading.Thread):
                 try:
                     ack = self.read_device(ACK_LEN)
                 except DeviceConnectivityError as e:
-                    print "Exception on first ack : "+str(e)
+                    print("Exception on first ack : "+str(e))
                     return
                 self.chk_ack(ack)
 
@@ -385,7 +380,7 @@ class DeviceClient(threading.Thread):
                         self.last_ack = ack
                         self.write_device(ack)
                     except DeviceConnectivityError as ex:
-                        print "Exception on device connectivity: "+str(ex.message)
+                        print("Exception on device connectivity: "+str(ex.message))
                         self.reconnection()
 
             cmd = SYS_OFF_CMD.decode("hex")
@@ -399,8 +394,7 @@ class DeviceClient(threading.Thread):
             traceback.print_exc()
             if self.outfile :
                 self.outfile.close()
-        print "STOP"
-
+        print("STOP")
 
 
 # Create WriteToFile threads
@@ -408,7 +402,7 @@ try:
     thread.start_new_thread(monitorUserCmd, ( ))
     thread.start_new_thread(putDataToCloud, (queue, ))
 except:
-    print "Error: unable to start Monitor User's Cmd thread"
+    print("Error: unable to start Monitor User's Cmd thread")
 
 
 
