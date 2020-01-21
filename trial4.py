@@ -11,7 +11,7 @@ import subprocess
 import os
 from PIL import Image;
 
-img = Image.open('docs/plan.jpg')
+img = Image.open('docs/rm3.png')
 
 # For reading the last few lines of sensor data values stored in a file
 def tail():
@@ -63,27 +63,6 @@ def update_graph(n):
         X.append(data.split(',')[1])
         Y.append(data.split(',')[2])
 
-    # data = go.Scatter(
-    #     x = list(X),
-    #     y = list(Y),
-    #     name = 'Scatter',
-    #     # mode = 'lines+markers'
-    #     mode = 'lines'    
-    # )
-
-    # layout = go.Layout(xaxis=dict(range=[1, 500]),
-    #                     yaxis=dict(range=[1, 500]),
-    #                     height=500,
-    #                     showlegend=False,
-    #                   
-    #                     )
-
-    # fig = {'data':[data],
-    #         'layout':  layout
-    #         }
-
-    
-
     # Add trace
     data = go.Scatter(
         x = list(X),
@@ -92,11 +71,6 @@ def update_graph(n):
         # mode = 'lines+markers'
         mode = 'lines'    
     )
-
-    # fig.add_trace(
-    #     # go.Scatter(x=[0, 0.5, 1, 2, 2.2], y=[1.23, 2.5, 0.42, 3, 11])
-    #     data
-    # )
 
     layout = go.Layout(xaxis=dict(range=[1, 500]),
                         yaxis=dict(range=[1, 500]),
@@ -108,8 +82,6 @@ def update_graph(n):
         data = [data],
         layout=layout
     )
-        # fig = {'data':[data],
-            # 'layout':layout}
 
     # Add images
     fig.add_layout_image(
@@ -126,10 +98,8 @@ def update_graph(n):
                 layer="below")
     )
 
-    
     # Set templates
     fig.update_layout(template="plotly_white")
-
 
     return fig
 

@@ -47,8 +47,8 @@ import thread
 # device_ip = '192.168.1.5'
 
 
-# device_ip = '172.27.22.120' # No 149
-device_ip = '172.27.22.57' # No 145
+device_ip = '172.27.22.120' # Static IP for No 149
+# device_ip = '172.27.22.57' # Static IP for No 145
 
 MAX_CMD_LENGTH = 6
 ACK_LEN = 4

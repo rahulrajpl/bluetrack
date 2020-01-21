@@ -1,0 +1,23 @@
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyCkHqJQIMS2BecgGYNPHmPcTcxDaoUtri0",
+    authDomain: "oblu-iot-ab1cd.firebaseapp.com",
+    databaseURL: "https://oblu-iot-ab1cd.firebaseio.com",
+    projectId: "oblu-iot-ab1cd",
+    storageBucket: "",
+    messagingSenderId: "737137485844",
+    appId: "1:737137485844:web:085e6380217781914e5f01",
+    measurementId: "G-LGRXLBQWSF"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
