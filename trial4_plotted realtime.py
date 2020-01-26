@@ -12,12 +12,16 @@ import os
 from time import sleep
 from PIL import Image;
 
-img = Image.open('docs/python-logo.png')
+img = Image.open('docs/rm3.jpg')
 
 # For reading the last few lines of sensor data values stored in a file
 def tail():
     result = subprocess.run(['tail', '-1', 'sensor/GetData/steps.txt'], stdout=subprocess.PIPE)
     return result.stdout.decode('utf-8') 
+
+# For offline steps plotting
+file = open('sensor/GetData/steps.txt', 'r') 
+file.readline()
 
 X = deque(maxlen=100)
 Y = deque(maxlen=100)
@@ -57,16 +61,17 @@ def update_graph(n):
     global X
     global Y
     
-    # data = tail()
-    # sleep(2)
-    new_X = str(tail()).split(',')[1]
-    new_Y = str(tail()).split(',')[2]
-    print(new_X, new_Y)
-    # new_X = data.split(',')[1]
-    # new_Y = data.split(',')[2]
+    # For real-time plot
+    # new_X = str(tail()).split(',')[1]
+    # new_Y = str(tail()).split(',')[2]
+
+    # For simulated real-time plot
+    new_X = file.readline().split(',')[1]
+    new_Y = file.readline().split(',')[2]
+
+    # print(new_X, new_Y)
+
     if not (X==new_X and Y==new_Y):
-        # X.append(data.split(',')[1])
-        # Y.append(data.split(',')[2])
         X.append(new_X)
         Y.append(new_Y)
 
@@ -79,11 +84,13 @@ def update_graph(n):
         mode = 'lines'    
     )
 
+    # Layout the map
     layout = go.Layout(xaxis=dict(range=[-50, 50]),
                         yaxis=dict(range=[-50, 50]),
                         height=500,
                         showlegend=False,
                         )
+    
     # Create figure
     fig = go.Figure(
         data = [data],
@@ -91,19 +98,19 @@ def update_graph(n):
     )
 
     # Add images
-    # fig.add_layout_image(
-    #         go.layout.Image(
-    #             source=img,
-    #             xref="x",
-    #             yref="y",
-    #             x=0,
-    #             y=500,
-    #             sizex=500,
-    #             sizey=500,
-    #             sizing="stretch",
-    #             opacity=0.5,
-    #             layer="below")
-    # )
+    fig.add_layout_image(
+            go.layout.Image(
+                source=img,
+                xref="x",
+                yref="y",
+                x=0,
+                y=500,
+                sizex=500,
+                sizey=500,
+                sizing="stretch",
+                opacity=0.5,
+                layer="below")
+    )
 
     # Set templates
     fig.update_layout(template="plotly_white")

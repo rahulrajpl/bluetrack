@@ -42,8 +42,8 @@ import sys
 import traceback
 import thread
 
-# device_ip = '172.27.18.225' # No 145
-device_ip = '172.27.18.226' # No 149
+device_ip = '172.27.18.225' # No 145
+# device_ip = '172.27.18.226' # No 149
 
 MAX_CMD_LENGTH = 6
 ACK_LEN = 4

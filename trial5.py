@@ -9,14 +9,19 @@ from collections import deque
 import pandas as pd
 import subprocess
 import os
+from time import sleep
 from PIL import Image;
 
-# img = Image.open('docs/rm3.png')
+img = Image.open('docs/rm3.jpg')
 
 # For reading the last few lines of sensor data values stored in a file
 def tail():
-    result = subprocess.run(['tail', '-1', 'data.csv'], stdout=subprocess.PIPE)
+    result = subprocess.run(['tail', '-1', 'sensor/GetData/steps.txt'], stdout=subprocess.PIPE)
     return result.stdout.decode('utf-8') 
+
+# For offline steps plotting
+# file = open('sensor/GetData/steps.txt', 'r') 
+# file.readline()
 
 X = deque(maxlen=100)
 Y = deque(maxlen=100)
@@ -55,34 +60,20 @@ app.layout = html.Div([
 def update_graph(n):
     global X
     global Y
-
-    data = tail()
-    new_X = data.split(',')[1]
-    new_Y = data.split(',')[2]
-    if not (X==new_X and Y==new_Y):
-        X.append(data.split(',')[1])
-        Y.append(data.split(',')[2])
-
-    # data = go.Scatter(
-    #     x = list(X),
-    #     y = list(Y),
-    #     name = 'Scatter',
-    #     # mode = 'lines+markers'
-    #     mode = 'lines'    
-    # )
-
-    # layout = go.Layout(xaxis=dict(range=[1, 500]),
-    #                     yaxis=dict(range=[1, 500]),
-    #                     height=500,
-    #                     showlegend=False,
-    #                   
-    #                     )
-
-    # fig = {'data':[data],
-    #         'layout':  layout
-    #         }
-
     
+    # For real-time plot
+    new_X = str(tail()).split(',')[1]
+    new_Y = str(tail()).split(',')[2]
+
+    # For simulated real-time plot
+    # new_X = file.readline().split(',')[1]
+    # new_Y = file.readline().split(',')[2]
+
+    # print(new_X, new_Y)
+
+    if not (X==new_X and Y==new_Y):
+        X.append(new_X)
+        Y.append(new_Y)
 
     # Add trace
     data = go.Scatter(
@@ -90,46 +81,42 @@ def update_graph(n):
         y = list(Y),
         name = 'Scatter',
         # mode = 'lines+markers'
-        mode = 'lines'    
+        mode = 'lines'  
     )
 
-    # fig.add_trace(
-    #     # go.Scatter(x=[0, 0.5, 1, 2, 2.2], y=[1.23, 2.5, 0.42, 3, 11])
-    #     data
-    # )
+    # Layout the map
+    x_range = [-6, 25]
+    y_range = [-2, 25]
 
-    layout = go.Layout(xaxis=dict(range=[-100, 100]),
-                        yaxis=dict(range=[-100, 100]),
+    layout = go.Layout(xaxis=dict(range=x_range),
+                        yaxis=dict(range=y_range),
                         height=500,
                         showlegend=False,
                         )
+    
     # Create figure
     fig = go.Figure(
         data = [data],
         layout=layout
     )
-        # fig = {'data':[data],
-            # 'layout':layout}
 
     # Add images
-    # fig.add_layout_image(
-    #         go.layout.Image(
-    #             source=img,
-    #             xref="x",
-    #             yref="y",
-    #             x=0,
-    #             y=500,
-    #             sizex=100,
-    #             sizey=100,
-    #             sizing="stretch",
-    #             opacity=0.5,
-    #             layer="below")
-    # )
+    fig.add_layout_image(
+            go.layout.Image(
+                source=img,
+                xref="x",
+                yref="y",
+                x=x_range[0],
+                y=y_range[1],
+                sizex=30,
+                sizey=30,
+                sizing="stretch",
+                opacity=0.5,
+                layer="below")
+    )
 
-    
     # Set templates
     fig.update_layout(template="plotly_white")
-
 
     return fig
 
