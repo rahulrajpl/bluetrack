@@ -11,8 +11,10 @@ import subprocess
 import os
 from time import sleep
 from PIL import Image;
+import plotly.express as px
 
 img = Image.open('docs/rm3.jpg')
+
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 # For reading the last few lines of sensor data values stored in a file
@@ -35,16 +37,18 @@ Y.append(data.split(',')[2])
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 colors = {
     'background': '#111111',
-    'text': '#7F0000'
+    'text': '#7FDBFF'
 }
-app.layout = html.Div([
+app.layout = html.Div(style={'backgroundColor': colors['background'],
+                            }, 
+    children=[
     html.H1('ObluTrack',
             style={
             'textAlign': 'center',
             'color': colors['text']
         }),
 
-    html.Div([
+    html.Div(children=[
         html.P('Deck reckoning of security personnel'),
         html.P('Data analytics on deck reckoning data to identify stealthy diversion of surveillance route')
         ],
@@ -53,13 +57,19 @@ app.layout = html.Div([
         'color': colors['text']
         }), 
 
-    html.Div([
+    html.Div(children=[
         html.Img(src=img,
-                alt='bg_image')
-        ],style={
-        'textAlign': 'center'}),
-
-    dcc.Graph(
+                alt='bg_image'),
+        ],
+        # style={
+        # 'textAlign': 'center',
+        # 'position': 'absolute',
+        # 'top': '10',
+        # 'left': '10',}
+        ),
+    
+    html.Div(children=[
+        dcc.Graph(
         id='live-graph',
         animate=False,
         config={
@@ -68,10 +78,16 @@ app.layout = html.Div([
             'displayModeBar':True
         }
         ),
+    ],
+    style={'position': 'absolute',
+        'top': '0',
+        'left': '0',
+        'z-index': '10'}),
+    
 
     dcc.Interval(
         id='graph-update',
-        interval=1000,
+        interval=1500,
         n_intervals=0
         )
     ]
@@ -84,7 +100,7 @@ app.layout = html.Div([
 def update_graph(n):
     global X
     global Y
-    
+    Z = 0
     # For real-time plot
     # new_X = str(tail()).split(',')[1]
     # new_Y = str(tail()).split(',')[2]
@@ -105,27 +121,30 @@ def update_graph(n):
     data = go.Scatter(
         x = list(X),
         y = list(Y),
+        # z = Z,
         name = 'Scatter',
         # mode = 'lines+markers'
         mode = 'lines'  
     )
-
-    # Layout the map
-    x_range = [-10, 65]
-    y_range = [-30, 65]
-
-    layout = go.Layout(xaxis=dict(range=x_range),
-                        yaxis=dict(range=y_range),
-                        height=500,
-                        showlegend=False,
-                        uirevision='graph-update'
-                        )
     
-    # Create figure
-    fig = go.Figure(
-        data = [data],
-        layout=layout
-    )
+    # Layout the map
+    # x_range = [-10, 65]
+    # y_range = [-30, 65]
+
+    # layout = go.Layout(xaxis=dict(range=x_range),
+    #                     yaxis=dict(range=y_range),
+    #                     height=500,
+    #                     showlegend=False,
+    #                     uirevision='graph-update',
+    #                     paper_bgcolor='rgba(0,0,0,0)',
+    #                     plot_bgcolor='rgba(0,0,0,0)'
+    #                     )
+    
+    # # Create figure
+    # fig = go.Figure(
+    #     data = [data],
+    #     layout=layout
+    # )
 
     # Add images
     # fig.add_layout_image(
@@ -143,10 +162,13 @@ def update_graph(n):
     # )
 
     # Set templates
-    fig.update_layout(template="plotly_white")
+    # fig.update_layout(template="plotly_white")
     # fig.update_xaxes(showticklabels=False, zeroline=False)
     # fig.update_yaxes(showticklabels=False, zeroline=False)
-    fig.update_layout(xaxis_showgrid=False, yaxis_showgrid=False)
+    # fig.update_layout(xaxis_showgrid=False, yaxis_showgrid=False)
+
+    fig = px.line_3d(x=list(X), y=list(Y), z=list(Y))
+
     return fig
 
 if __name__=='__main__':
