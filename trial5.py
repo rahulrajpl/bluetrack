@@ -13,6 +13,7 @@ from time import sleep
 from PIL import Image;
 
 img = Image.open('docs/rm3.jpg')
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 # For reading the last few lines of sensor data values stored in a file
 def tail():
@@ -20,8 +21,8 @@ def tail():
     return result.stdout.decode('utf-8') 
 
 # For offline steps plotting
-# file = open('sensor/GetData/steps.txt', 'r') 
-# file.readline()
+file = open('sensor/GetData/steps.txt', 'r') 
+file.readline()
 
 X = deque(maxlen=100)
 Y = deque(maxlen=100)
@@ -31,9 +32,33 @@ data = tail()
 X.append(data.split(',')[1])
 Y.append(data.split(',')[2])
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+colors = {
+    'background': '#111111',
+    'text': '#7F0000'
+}
 app.layout = html.Div([
-    
+    html.H1('Hello Dash',
+            style={
+            'textAlign': 'center',
+            'color': colors['text']
+        }),
+
+    html.Div([
+        html.P('Dash converts Python classes into HTML'),
+        html.P('This conversion happens behind the scenes by Dash\'s JavaScript front-end')
+        ],
+        style={
+        'textAlign': 'center',
+        'color': colors['text']
+        }), 
+
+    html.Div([
+        html.Img(src=img,
+                alt='bg_image')
+        ],style={
+        'textAlign': 'center'}),
+
     dcc.Graph(
         id='live-graph',
         animate=False,
@@ -41,15 +66,15 @@ app.layout = html.Div([
             'autosizable':True,
             'scrollZoom':True,
             'displayModeBar':True
-        }
+        },
+        
         ),
 
     dcc.Interval(
         id='graph-update',
         interval=1000,
         n_intervals=0
-    ),
-
+        )
     ]
 )
 
@@ -62,13 +87,15 @@ def update_graph(n):
     global Y
     
     # For real-time plot
-    new_X = str(tail()).split(',')[1]
-    new_Y = str(tail()).split(',')[2]
+    # new_X = str(tail()).split(',')[1]
+    # new_Y = str(tail()).split(',')[2]
 
     # For simulated real-time plot
-    # new_X = file.readline().split(',')[1]
-    # new_Y = file.readline().split(',')[2]
-
+    if not file=="":
+        new_X = file.readline().split(',')[1]
+        new_Y = file.readline().split(',')[2]
+    else:
+        file.seek(0,0)
     # print(new_X, new_Y)
 
     if not (X==new_X and Y==new_Y):
@@ -85,13 +112,14 @@ def update_graph(n):
     )
 
     # Layout the map
-    x_range = [-6, 25]
-    y_range = [-2, 25]
+    x_range = [-10, 65]
+    y_range = [-30, 65]
 
     layout = go.Layout(xaxis=dict(range=x_range),
                         yaxis=dict(range=y_range),
                         height=500,
                         showlegend=False,
+                        uirevision='graph-update'
                         )
     
     # Create figure
@@ -101,23 +129,25 @@ def update_graph(n):
     )
 
     # Add images
-    fig.add_layout_image(
-            go.layout.Image(
-                source=img,
-                xref="x",
-                yref="y",
-                x=x_range[0],
-                y=y_range[1],
-                sizex=30,
-                sizey=30,
-                sizing="stretch",
-                opacity=0.5,
-                layer="below")
-    )
+    # fig.add_layout_image(
+    #         go.layout.Image(
+    #             source=img,
+    #             xref="x",
+    #             yref="y",
+    #             x=x_range[0],
+    #             y=y_range[1],
+    #             sizex=75,
+    #             sizey=85,
+    #             sizing="stretch",
+    #             opacity=1,
+    #             layer="below")
+    # )
 
     # Set templates
     fig.update_layout(template="plotly_white")
-
+    # fig.update_xaxes(showticklabels=False, zeroline=False)
+    # fig.update_yaxes(showticklabels=False, zeroline=False)
+    fig.update_layout(xaxis_showgrid=False, yaxis_showgrid=False)
     return fig
 
 if __name__=='__main__':
