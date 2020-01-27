@@ -79,15 +79,16 @@ app.layout = html.Div(style={'backgroundColor': colors['background'],
         }
         ),
     ],
-    style={'position': 'absolute',
-        'top': '0',
-        'left': '0',
-        'z-index': '10'}),
+    # style={'position': 'absolute',
+    #     'top': '0',
+    #     'left': '0',
+    #     'z-index': '10'}
+        ),
     
 
     dcc.Interval(
         id='graph-update',
-        interval=1500,
+        interval=2500,
         n_intervals=0
         )
     ]
@@ -167,7 +168,14 @@ def update_graph(n):
     # fig.update_yaxes(showticklabels=False, zeroline=False)
     # fig.update_layout(xaxis_showgrid=False, yaxis_showgrid=False)
 
-    fig = px.line_3d(x=list(X), y=list(Y), z=list(Y),)
+    fig = px.line_3d(x=list(X), y=list(Y), z=list(X),)
+    fig.update_layout(uirevision='graph-update',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)')
+
+    fig.update_xaxes(showticklabels=False, zeroline=False)
+    fig.update_yaxes(showticklabels=False, zeroline=False)
+    fig.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, zaxis_showgrid=False)
 
     return fig
 
