@@ -17,7 +17,7 @@ app.layout = html.Div([
     
     dcc.Graph(
         id='live-graph',
-        animate=True
+        animate=False
     ),
 
     dcc.Interval(
@@ -50,8 +50,8 @@ def update_graph(n):
     #                             )
     #         }
     return {'data':[data],
-            'layout': go.Layout(xaxis=dict(range=[1, 100]),
-                                yaxis=dict(range=[1, 100])
+            'layout': go.Layout(xaxis=dict(range=[-1000, 1000]),
+                                yaxis=dict(range=[-1000, 1000])
                                 )
             }
 

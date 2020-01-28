@@ -29,7 +29,7 @@ file.readline()
 X = deque(maxlen=100)
 Y = deque(maxlen=100)
 Z = deque(maxlen=100)
-
+interval = 3000
 #Initial data
 data = tail()
 X.append(data.split(',')[1])
@@ -61,14 +61,17 @@ app.layout = html.Div(
         }), 
     
     html.Div(children=[
-        html.P('Deck reckoning of security personnel'),
-        html.P('Data analytics on deck reckoning data to identify stealthy diversion of surveillance route')
-        ],
-        style={
-        'textAlign': 'center',
-        'color': colors['text'],
-        
-        }), 
+        dcc.Graph(
+        id='live-graph-analytics',
+        animate=False,
+        config={
+            'autosizable':True,
+            'scrollZoom':True,
+            'displayModeBar':True
+        }
+        ),
+    ]
+        ), 
 
     html.Div(children=[
         html.Img(src=img,
@@ -94,7 +97,7 @@ app.layout = html.Div(
     ],
     style={
         'position': 'absolute',
-        'top': '17%',
+        'top': '87%',
         'left': '5%',
         'right':'5%',
         }
@@ -103,11 +106,33 @@ app.layout = html.Div(
 
     dcc.Interval(
         id='graph-update',
-        interval=5500,
+        interval=interval,
+        n_intervals=0
+        ),
+
+    dcc.Interval(
+        id='graph-update-analytics',
+        interval=interval,
         n_intervals=0
         )
     ]
 )
+
+df = pd.read_csv('docs/analytics.csv')
+
+@app.callback(
+    Output('live-graph-analytics', 'figure'),
+    [Input('graph-update-analytics','n_intervals')]
+)
+def update_graph_analytics(n):
+    '''
+    Analytics code here
+    '''
+    
+    fig = px.line(df, x='Date', y='AAPL.High')
+
+    return fig
+
 
 @app.callback(
     Output('live-graph', 'figure'),
