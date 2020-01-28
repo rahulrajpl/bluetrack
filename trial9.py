@@ -59,25 +59,27 @@ app.layout = html.Div(
         'color': colors['text'],
         
         }), 
+    
+    html.Div(children=[
+        html.P('Deck reckoning of security personnel'),
+        html.P('Data analytics on deck reckoning data to identify stealthy diversion of surveillance route')
+        ],
+        style={
+        'textAlign': 'center',
+        'color': colors['text'],
+        
+        }), 
 
     html.Div(children=[
         html.Img(src=img,
-                alt='bg_image'),
+                alt='bg_image', style={'height':'75%',
+        'width':'75%'}),
         ],
         style={
-        # 'textAlign': 'center',
-        # 'marginLeft': 'auto',
-        # 'marginRight': 'auto',
-        # 'position': 'absolute',
-        # 'top': '35%',
-        # 'left': '25%',
+        'textAlign': 'center',
         'opacity': '0.3',
-        # 'width':'50%',
-        # 'display': 'block',
-        'margin': 'auto',
-        'border':'10px'
-        }
-        ),
+   
+        }),
     
     html.Div(children=[
         dcc.Graph(
@@ -92,8 +94,9 @@ app.layout = html.Div(
     ],
     style={
         'position': 'absolute',
-        'top': '35%',
-        'left': '25%',
+        'top': '17%',
+        'left': '5%',
+        'right':'5%',
         }
         ),
     
