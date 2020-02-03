@@ -9,18 +9,20 @@ def tail():
 
 
 def simulate_data():
-    sleep(1)
+    sleep(.20)
     global file
     if not file=="":
-        new_X = file.readline().split(',')[1]
-        new_Y = file.readline().split(',')[2]
+        line = file.readline().split(',')
+        
+        new_X, new_Y = line[1], line[2]
+        
         # new_Z = file.readline().split(',')[3]
         new_Z = 0
     else:
         file.seek(0,0)
-    return new_X, new_Y, new_Z
+    return new_X, new_Y
 
-Y = deque(maxlen=20)
+Y = deque(maxlen=200)
 oa = ObluAnalytics()
 
 UT, centroid, threshold = oa.getThresholdScore(data_path='sensor/GetData/steps_train.txt')
@@ -35,5 +37,11 @@ file.readline()
 
 while True:
     Y.append(simulate_data())
-    if len(Y) >=20:
+    if len(Y) >=200:
+        sleep(1)
         print(oa.getScore(UT, centroid, threshold, pd.DataFrame(Y)))
+
+# UT, centroid, threshold = oa.getThresholdScore(data_path=test_path)
+
+# print(threshold)
+file.close()

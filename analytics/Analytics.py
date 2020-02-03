@@ -21,7 +21,7 @@ class ObluAnalytics():
         self.df =  self.pca.fit_transform(self.df)
         
         N = len(self.df)
-        L = 20
+        L = 200
         self.X_train = hankel(self.df[:L],self.df[L-1:]) # Creating trajectory matrix
         eigenValues, eigenVectors = eigh(np.matmul(self.X_train, self.X_train.T))
         self.idx = eigenValues.argsort()[::-1]
@@ -32,7 +32,7 @@ class ObluAnalytics():
         # Extracted Training signals
         U, Sigma, V = np.linalg.svd(self.X_train)
         V = V.T
-        d = np.linalg.matrix_rank(self.X_train)
+        # d = np.linalg.matrix_rank(self.X_train)
         X_elem = np.array( [Sigma[i] * np.outer(U[:,i], V[:,i]) for i in range(0,r)] )
         X_train_extracted = X_elem.sum(axis=0)
         # X_train_extracted_data = np.asarray(list(X_train_extracted[:,0]) + list(X_train_extracted[:,-1]))
@@ -65,11 +65,12 @@ class ObluAnalytics():
         return UT, centroid, dt_theta
 
     def getScore(self, UT, centroid, threshold, df):
+        # print(df.shape)
         self.pca = PCA(n_components = 1)
         lag_vector =  self.pca.fit_transform(df)
         projected_lag_vector = np.matmul(UT, lag_vector)    
         dist = centroid - projected_lag_vector
-        score = np.linalg.norm(dist, axis=0, ord=2)
+        score = np.linalg.norm(dist, ord=2)
         return score    
 
 
