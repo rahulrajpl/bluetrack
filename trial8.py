@@ -71,7 +71,7 @@ app.layout = html.Div(
         # 'position': 'absolute',
         # 'top': '35%',
         # 'left': '25%',
-        'opacity': '0.3',
+        'opacity': '0.0',
         # 'width':'50%',
         # 'display': 'block',
         'margin': 'auto',
@@ -100,7 +100,7 @@ app.layout = html.Div(
 
     dcc.Interval(
         id='graph-update',
-        interval=5500,
+        interval=1500,
         n_intervals=0
         )
     ]
