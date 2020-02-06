@@ -1,16 +1,28 @@
 body {
     font-family: sans-serif;
-    text-align: 'center'
+    text-align: center;
+    
 }
 
 h1, h2, h3, h4, h5, h6 {
     color: hotpink;
-    text-align: 'center'
+    text-align: center;
 }
 
-.live-plot{
+.app-plot{
 position: absolute;
 top: 5%;
 left: 5%;
 right:5%;
+text-align: center;
+display: block;
 } 
+
+#app-plotid{
+    display: block;
+}
+
+.app-image{
+    
+    display: block;
+}

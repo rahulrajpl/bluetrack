@@ -1,11 +1,21 @@
 .app-header {
     height: 60px;
     line-height: 60px;
-    border-bottom: thin lightgrey solid;
+    /* border-bottom: thin lightgrey solid; */
 }
 
 .app-header .app-header--title {
     font-size: 50px;
     padding-left: 5px;
     text-align: center;
+}
+
+.app-header .app-header--sub-head{
+    font-size: 25px;
+    padding-left: 5px;
+    text-align: center;
+}
+
+#app-head{
+    display: inline;
 }

@@ -32,70 +32,54 @@ data = tail()
 X.append(data.split(',')[1])
 Y.append(data.split(',')[2])
 
-# app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app = dash.Dash(__name__)
 colors = {
     'background': '#111111',
     'text': '#7F0000'
 }
 app.layout = html.Div(children=[
-    # html.H1('ObluTrack',
-    #     #     style={
-    #     #     'textAlign': 'center',
-    #     #     'color': colors['text']
-    #     # }
-    #     ),
-
-    # html.Div(children=[
-    #     html.P('Deck reckoning of security personnel'),
-    #     html.P('Data analytics on deck reckoning data to identify stealthy diversion of surveillance route')
-    #     ],
-    #     # style={
-    #     # 'textAlign': 'center',
-    #     # 'color': colors['text']
-    #     # }
-    #     ), 
 
     html.Div(
         className="app-header",
+        id="app-head",
         children=[
-            html.Div('ObluTrack', className="app-header--title")
+            html.Div('ObluTrack', className="app-header--title"),
+        ]
+    ),
+    html.Div(
+        className="app-header",
+        children=[
+            html.P('Live dead reckoning and Outlier Detection in Trajectory Data', className="app-header--sub-head")
         ]
     ),
 
-
-    html.Div([
+    html.Div(
+        className="app-image",
+        children=[
         html.Img(src=img,
                 alt='bg_image')
-        ],style={
-        'textAlign': 'center'}),
-
-
+        ]
+        ),
 
     html.Div(
-        className="live-plot",
+        className="app-plot",
+        id="app-plotid",
         children=[
-        dcc.Graph(
-        id='live-graph',
-        animate=False,
-        config={
-            'autosizable':True,
-            'scrollZoom':True,
-            'displayModeBar':True
-        }
-        ),
-    ],
-    # style={
-    #     'position': 'absolute',
-    #     'top': '15%',
-    #     'left': '5%',
-    #     'right':'5%',
-    #     }
+            dcc.Graph(
+            id='live-graph',
+            animate=False,
+            config={
+                'autosizable':True,
+                'scrollZoom':True,
+                'displayModeBar':True
+            }
+            )
+        ]
         ),
 
     dcc.Interval(
         id='graph-update',
-        interval=1000,
+        interval=10000,
         n_intervals=0
         )
     ]
