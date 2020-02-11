@@ -33,31 +33,44 @@ X.append(data.split(',')[1])
 Y.append(data.split(',')[2])
 
 app = dash.Dash(__name__)
-colors = {
-    'background': '#111111',
-    'text': '#7F0000'
-}
+# colors = {
+#     'background': '#111111',
+#     'text': '#7F0000'
+# }
 app.layout = html.Div(children=[
+
+    html.Div(id="container",
+            children=[html.Div(
+                id="elem",  
+                children=[html.Div(
+                    className="elem-cell",
+                    children=[html.Span('They see me rolling', className="visual-elem")]
+
+                )]
+            )]
+        ),
+
 
     html.Div(
         className="app-header",
-        id="app-head",
+        
         children=[
             html.Div('ObluTrack', className="app-header--title"),
         ]
     ),
+
+    
     html.Div(
         className="app-header",
         children=[
-            html.P('Live dead reckoning and Outlier Detection in Trajectory Data', className="app-header--sub-head")
+            html.P('Pedestrian dead reckoning and Outlier Detection in Trajectory Data', className="app-header--sub-head")
         ]
     ),
 
     html.Div(
         className="app-image",
         children=[
-        html.Img(src=img,
-                alt='bg_image')
+        html.Img(src=img, alt='bg_image')
         ]
         ),
 
@@ -127,8 +140,8 @@ def update_graph(n):
                         height=500,
                         showlegend=False,
                         uirevision='graph-update',
-                        paper_bgcolor='rgba(5,0,0,0)',
-                        plot_bgcolor='rgba(5,0,0,0)'
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        plot_bgcolor='rgba(0,0,0,0)'
                         )
     
     # Create figure
@@ -145,4 +158,5 @@ def update_graph(n):
     return fig
 
 if __name__=='__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, dev_tools_hot_reload=False)
+    # app.run_server(debug=True)

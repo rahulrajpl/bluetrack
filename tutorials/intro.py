@@ -3,10 +3,20 @@ from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
 
-app = dash.Dash()
+app = dash.Dash(__name__)
 
 app.layout = html.Div(children=[
     html.H1('Dash Tutorial Intro'),
+    html.Div(id="container",
+            children=[html.Div(
+                id="elem",  
+                children=[html.Div(
+                    className="elem-cell",
+                    children=[html.Span('They see me rolling', className="visual-elem")]
+                )]
+            )]
+        ),
+    
     dcc.Graph(id='example',
             figure={
                 'data': [

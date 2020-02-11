@@ -1,0 +1,54 @@
+body {
+    font-family: sans-serif;
+    text-align: center;
+    
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: hotpink;
+    text-align: center;
+}
+
+.app-plot{
+position: absolute;
+top: 25%;
+left: 5%;
+right:5%;
+text-align: center;
+display: block;
+} 
+
+#app-plotid{
+    display: block;
+}
+
+.app-image{
+    position: absolute;
+    top: 25%;
+    left: 5%;
+    right:5%;
+    text-align: center;
+    display: block;
+}
+
+#container{
+    position:relative;
+    left:20px;
+    top:20px;
+    display:inline-block;
+}
+
+#elem{
+    display:table;
+    border:none;
+    background-color:orange;
+    width:100px;
+    height:100px;
+    cursor:pointer;
+}
+#elem .elem-cell{
+    display:table-cell;
+    vertical-align:middle;
+    text-align:center;
+    padding:10px;
+}

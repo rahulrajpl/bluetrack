@@ -38,7 +38,7 @@ Y.append(data.split(',')[2])
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 colors = {
     'background': '#111111',
-    'text': '#7FDBFF'
+    'text': '#7F000F'
 }
 app.layout = html.Div(
     # style={'backgroundColor': colors['background'],
@@ -60,18 +60,18 @@ app.layout = html.Div(
         
         }), 
     
-    html.Div(children=[
-        dcc.Graph(
-        id='live-graph-analytics',
-        animate=False,
-        config={
-            'autosizable':True,
-            'scrollZoom':True,
-            'displayModeBar':True
-        }
-        ),
-    ]
-        ), 
+    # html.Div(children=[
+    #     dcc.Graph(
+    #         id='live-graph-analytics',
+    #         animate=False,
+    #         config={
+    #             'autosizable':True,
+    #             'scrollZoom':True,
+    #             'displayModeBar':True
+    #             }
+    #             ),
+    #         ]
+    #     ), 
 
     html.Div(children=[
         html.Img(src=img,
@@ -97,7 +97,7 @@ app.layout = html.Div(
     ],
     style={
         'position': 'absolute',
-        'top': '87%',
+        'top': '17%',
         'left': '5%',
         'right':'5%',
         }
@@ -110,28 +110,28 @@ app.layout = html.Div(
         n_intervals=0
         ),
 
-    dcc.Interval(
-        id='graph-update-analytics',
-        interval=interval,
-        n_intervals=0
-        )
+    # dcc.Interval(
+    #     id='graph-update-analytics',
+    #     interval=interval,
+    #     n_intervals=0
+    #     )
     ]
 )
 
 df = pd.read_csv('docs/analytics.csv')
 
-@app.callback(
-    Output('live-graph-analytics', 'figure'),
-    [Input('graph-update-analytics','n_intervals')]
-)
-def update_graph_analytics(n):
-    '''
-    Analytics code here
-    '''
+# @app.callback(
+#     Output('live-graph-analytics', 'figure'),
+#     [Input('graph-update-analytics','n_intervals')]
+# )
+# def update_graph_analytics(n):
+#     '''
+#     Analytics code here
+#     '''
     
-    fig = px.line(df, x='Date', y='AAPL.High')
+#     fig = px.line(df, x='Date', y='AAPL.High')
 
-    return fig
+#     return fig
 
 
 @app.callback(
@@ -143,18 +143,23 @@ def update_graph(n):
     global Y
     global Z
     # For real-time plot
-    # new_X = str(tail()).split(',')[1]
-    # new_Y = str(tail()).split(',')[2]
+    #---------------------------------
+
+    new_X = str(tail()).split(',')[1]
+    new_Y = str(tail()).split(',')[2]
+    new_Z = 0
+    #---------------------------------
 
     # For simulated real-time plot
-    if not file=="":
-        new_X = file.readline().split(',')[1]
-        new_Y = file.readline().split(',')[2]
-        # new_Z = file.readline().split(',')[3]
-        new_Z = 0
-    else:
-        file.seek(0,0)
-    # print(new_X, new_Y)
+    #---------------------------------
+    # if not file=="":
+    #     new_X = file.readline().split(',')[1]
+    #     new_Y = file.readline().split(',')[2]
+    #     # new_Z = file.readline().split(',')[3]
+    #     new_Z = 0
+    # else:
+    #     file.seek(0,0)
+    #---------------------------------
 
     if not (X==new_X and Y==new_Y and Z==new_Z):
         X.append(new_X)
