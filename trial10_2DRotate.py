@@ -13,7 +13,7 @@ from time import sleep
 from PIL import Image;
 
 img = Image.open('docs/rm3.jpg')
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+# external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 # For reading the last few lines of sensor data values stored in a file
 def tail():
@@ -21,11 +21,15 @@ def tail():
     return result.stdout.decode('utf-8') 
 
 # For offline steps plotting
-file = open('sensor/GetData/steps.txt', 'r') 
+# file = open('sensor/GetData/steps.txt', 'r') 
+file = open('analytics/steps_train.txt', 'r') 
+
 file.readline()
 
-X = deque(maxlen=100)
-Y = deque(maxlen=100)
+X = deque(maxlen=15)
+Y = deque(maxlen=15)
+counter = 0
+interval = 500 # Timer for updating the graph in msec
 
 #Initial data
 data = tail()
@@ -39,21 +43,20 @@ app = dash.Dash(__name__)
 # }
 app.layout = html.Div(children=[
 
-    html.Div(id="container",
-            children=[html.Div(
-                id="elem",  
-                children=[html.Div(
-                    className="elem-cell",
-                    children=[html.Span('They see me rolling', className="visual-elem")]
+    # html.Div(id="container",
+    #         children=[html.Div(
+    #             id="elem",  
+    #             children=[html.Div(
+    #                 className="elem-cell",
+    #                 children=[html.Span('They see me rolling', className="visual-elem")]
 
-                )]
-            )]
-        ),
+    #             )]
+    #         )]
+    #     ),
 
 
     html.Div(
         className="app-header",
-        
         children=[
             html.Div('ObluTrack', className="app-header--title"),
         ]
@@ -70,8 +73,8 @@ app.layout = html.Div(children=[
     html.Div(
         className="app-image",
         children=[
-        html.Img(src=img, alt='bg_image')
-        ]
+            html.Img(src=img, alt='bg_image')
+            ]
         ),
 
     html.Div(
@@ -84,7 +87,8 @@ app.layout = html.Div(children=[
             config={
                 'autosizable':True,
                 'scrollZoom':True,
-                'displayModeBar':True
+                'displayModeBar':'hover',
+                
             }
             )
         ]
@@ -92,7 +96,7 @@ app.layout = html.Div(children=[
 
     dcc.Interval(
         id='graph-update',
-        interval=10000,
+        interval=interval, 
         n_intervals=0
         )
     ]
@@ -105,18 +109,23 @@ app.layout = html.Div(children=[
 def update_graph(n):
     global X
     global Y
-    
+    global counter
+    counter += interval/1000
+    #-----------------------------------------------------
     # For real-time plot
     # new_X = str(tail()).split(',')[1]
     # new_Y = str(tail()).split(',')[2]
+    #-----------------------------------------------------
 
+    #-----------------------------------------------------
     # For simulated real-time plot
     if not file=="":
-        new_X = file.readline().split(',')[1]
-        new_Y = file.readline().split(',')[2]
+        data = file.readline().split(',')
+        new_X, new_Y = data[1], data[2]
     else:
         file.seek(0,0)
-    # print(new_X, new_Y)
+    # # print(new_X, new_Y)
+    #-----------------------------------------------------
 
     if not (X==new_X and Y==new_Y):
         X.append(new_X)
@@ -127,8 +136,8 @@ def update_graph(n):
         x = list(X),
         y = list(Y),
         name = 'Scatter',
-        # mode = 'lines+markers'
-        mode = 'lines'  
+        mode = 'lines+markers'
+        # mode = ''  
     )
 
     # Layout the map
@@ -158,5 +167,5 @@ def update_graph(n):
     return fig
 
 if __name__=='__main__':
-    app.run_server(debug=True, dev_tools_hot_reload=False)
-    # app.run_server(debug=True)
+    # app.run_server(debug=True, dev_tools_hot_reload=False)
+    app.run_server(debug=True)

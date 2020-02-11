@@ -11,11 +11,12 @@ h1, h2, h3, h4, h5, h6 {
 
 .app-plot{
 position: absolute;
-top: 25%;
+top: 15%;
 left: 5%;
 right:5%;
 text-align: center;
 display: block;
+transform: rotate(0deg);
 } 
 
 #app-plotid{
@@ -24,7 +25,7 @@ display: block;
 
 .app-image{
     position: absolute;
-    top: 25%;
+    top: 35%;
     left: 5%;
     right:5%;
     text-align: center;

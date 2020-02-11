@@ -218,5 +218,5 @@ var kcRotateDial = function(elem) {
     return output;
 }
 
-var elem = document.getElementById("elem");
-kcRotateDial(elem);
+// var elem = document.getElementById("elem");
+// kcRotateDial(elem);

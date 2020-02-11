@@ -29,7 +29,7 @@ file.readline()
 X = deque(maxlen=100)
 Y = deque(maxlen=100)
 Z = deque(maxlen=100)
-interval = 3000
+interval = 2000
 #Initial data
 data = tail()
 X.append(data.split(',')[1])
@@ -145,20 +145,20 @@ def update_graph(n):
     # For real-time plot
     #---------------------------------
 
-    new_X = str(tail()).split(',')[1]
-    new_Y = str(tail()).split(',')[2]
-    new_Z = 0
+    # new_X = str(tail()).split(',')[1]
+    # new_Y = str(tail()).split(',')[2]
+    # new_Z = 0
     #---------------------------------
 
     # For simulated real-time plot
     #---------------------------------
-    # if not file=="":
-    #     new_X = file.readline().split(',')[1]
-    #     new_Y = file.readline().split(',')[2]
-    #     # new_Z = file.readline().split(',')[3]
-    #     new_Z = 0
-    # else:
-    #     file.seek(0,0)
+    if not file=="":
+        new_X = file.readline().split(',')[1]
+        new_Y = file.readline().split(',')[2]
+        # new_Z = file.readline().split(',')[3]
+        new_Z = 0
+    else:
+        file.seek(0,0)
     #---------------------------------
 
     if not (X==new_X and Y==new_Y and Z==new_Z):
