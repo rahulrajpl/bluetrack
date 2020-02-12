@@ -93,7 +93,7 @@ app.layout = html.Div(children=[
             }
             )
         ]
-        ),
+    ),
 
     dcc.Interval(
         id='graph-update',

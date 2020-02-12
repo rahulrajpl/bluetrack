@@ -9,7 +9,7 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
 }
 
-.app-plot{
+/* .app-plot{
 position: absolute;
 top: 15%;
 left: 5%;
@@ -17,7 +17,7 @@ right:5%;
 text-align: center;
 display: block;
 transform: rotate(0deg);
-} 
+}  */
 
 #app-plotid{
     display: block;
@@ -31,7 +31,7 @@ transform: rotate(0deg);
     text-align: center;
     display: block;
 }
-
+/* 
 #container{
     position:relative;
     left:20px;
@@ -52,4 +52,4 @@ transform: rotate(0deg);
     vertical-align:middle;
     text-align:center;
     padding:10px;
-}
+} */
