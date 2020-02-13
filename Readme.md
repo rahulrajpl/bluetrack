@@ -1,16 +1,20 @@
-### ObluTrack
+### BlueTrack
 
 Present Target: Dynamic realtime plotting of sensor data from OBLU device to a web based GUI using plotly/dash 
 
-Stage 1: (2D live plotting) COMPLETED
+Stage 1: (2D live plotting) 
 
 ![link](docs/Peek1.gif)
 
-Stage 2: (3D live plotting) COMPLETED
+Stage 2: (3D live plotting) 
 
 ![link](docs/Peek2.gif)
 
-Stage 3: (2D live plotting with layout and basic user controls) IN PROGRESS
+Stage 3: 2D live plotting with pan, zoom and rotate functions
+
+![link](docs/pan_zoom_rotate.gif)
+
+Stage 4: Analytics on Trajectory data (In progress)
 
 #### References
 
