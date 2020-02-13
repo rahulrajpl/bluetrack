@@ -9,16 +9,6 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
 }
 
-/* .app-plot{
-position: absolute;
-top: 15%;
-left: 5%;
-right:5%;
-text-align: center;
-display: block;
-transform: rotate(0deg);
-}  */
-
 #app-plotid{
     display: block;
 }
@@ -26,10 +16,13 @@ transform: rotate(0deg);
 .app-image{
     position: absolute;
     top: 35%;
-    left: 5%;
-    right:5%;
+    /*left: 5%;*/
+    /* right:5%;  */
     text-align: center;
-    display: block;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    /* display: block; */
 }
 /* 
 #container{

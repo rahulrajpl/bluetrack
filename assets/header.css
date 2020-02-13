@@ -2,6 +2,9 @@
     height: 60px;
     line-height: 60px;
     /* border-bottom: thin lightgrey solid; */
+    text-align: center;
+    color: aqua;
+
 }
 
 .app-header .app-header--title {
@@ -14,8 +17,20 @@
     font-size: 25px;
     padding-left: 5px;
     text-align: center;
+    text-decoration-color: rgb(77, 107, 119);
+    /* color: rgb(rgb(184, 73, 73) */
 }
 
-#app-head{
-    display: inline;
+.header-analytics{
+    font-size: 25px;
+    padding-left: 5px;
+    text-align: center;
+    color: aqua;
+}
+
+#rotate-slider{
+    color: bisque;
+}
+#slider-output-container{
+    color: rgb(216, 135, 36);
 }
