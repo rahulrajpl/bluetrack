@@ -31,7 +31,7 @@ img = Image.open('docs/rm3_1.png')
 X = deque(maxlen=15)
 Y = deque(maxlen=15)
 counter = 0
-interval = 1500 # Timer for updating the graph in msec
+interval = 1000 # Timer for updating the graph in msec
 
 #Initial data
 data = tail()
@@ -142,7 +142,7 @@ def update_analytics(n):
     T.append(T[-1]+1)
     # print([pd.DataFrame(x) for x in zip(list(X),list(Y))])
     # print(pd.DataFrame([sum(x)/2 for x in zip(list(X), list(Y))]))
-    print('UT={}, centroid={}, theta={}'.format(UT, centroid, theta))
+    # print('UT={}, centroid={}, theta={}'.format(UT, centroid, theta))
     if len(T)>20:
         
         # stream = [sum(x)/2 for x in list(zip(list(X),list(Y)))]
@@ -155,26 +155,46 @@ def update_analytics(n):
     data = go.Scatter(
             x = list(T),
             y = list(S),
-            name = 'Scatter',
-            mode = 'lines+markers'
+            name = 'Realtime Anomaly Score',
+            mode = 'lines',
+            # showlegend=False,
         )
     threshold_data = go.Scatter(
-            x = list(T),
-            y = [float(theta)]*20,
-            name = 'Scatter',
-            mode = 'lines+markers'
+            x = [min(T),max(T)+20],
+            y = [float(theta)]*50,
+            name = 'Threshold Score',
+            mode = 'lines',
+            # showlegend=False,
         )       
     layout = go.Layout(
-                    title='Analytics-Live',
-                    xaxis=dict(range=[min(T),max(T)]),
+                    # title='Analytics-Live',
+                    xaxis=dict(range=[min(T),max(T)+20]),
                     # yaxis=dict(range=[min(S),max(S)]),
                     yaxis=dict(range=[0,100]),
                     template='plotly_dark',
                     uirevision='analytics-update',
+                    
         )
-    return {'data':[data,threshold_data],
-            'layout': layout
-            }
+    
+    fig = go.Figure(data = [data, threshold_data],
+                    layout = layout)
+    fig.update_layout(xaxis_title="No of Steps",
+                    yaxis_title="Score",)
+    legend=dict(
+        x=0,
+        y=1,
+        traceorder="normal",
+        font=dict(
+            family="sans-serif",
+            size=12,
+            color="black"
+        ),
+        bgcolor="LightSteelBlue",
+        bordercolor="Black",
+        borderwidth=2
+    )       
+    fig.update_layout(legend=legend)
+    return fig
 
 @app.callback(Output('app-plotid', 'style'), 
         [Input('rotate-slider', 'value')])
@@ -225,7 +245,7 @@ def update_graph(n):
         # mode = 'lines'  
     )
 
-    x_range = [-10, 65]
+    x_range = [-20, 65]
     y_range = [-30, 65]
 
     layout = go.Layout(xaxis=dict(range=x_range),
@@ -244,7 +264,7 @@ def update_graph(n):
     )
 
     # Fine tune layout
-    fig.update_layout(template="plotly_white")
+    # fig.update_layout(template="plotly_white")
     fig.update_xaxes(showticklabels=False, zeroline=False)
     fig.update_yaxes(showticklabels=False, zeroline=False)
     fig.update_layout(xaxis_showgrid=False, yaxis_showgrid=False)
