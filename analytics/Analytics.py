@@ -16,28 +16,25 @@ class ObluAnalytics():
 
     def getThresholdScore(self, data_path='../sensor/GetData/steps.txt'):
 
-        self.df = pd.read_csv(data_path, skiprows=1, header=None, usecols=[1,2])
-        self.pca = PCA(n_components = 1)
-        self.df =  self.pca.fit_transform(self.df)
+        df = pd.read_csv(data_path, skiprows=1, header=None, usecols=[1,2])
+        X_train_data = (df[1]+df[2])/2
         
-        N = len(self.df)
-        L = 200
-        self.X_train = hankel(self.df[:L],self.df[L-1:]) # Creating trajectory matrix
-        eigenValues, eigenVectors = eigh(np.matmul(self.X_train, self.X_train.T))
-        self.idx = eigenValues.argsort()[::-1]
-        eigenValues = eigenValues[self.idx]
-        eigenVectors = eigenVectors[:,self.idx]
+        N = len(X_train_data)
+        L = 15
+        
+        X_train = hankel(X_train_data[:L],X_train_data[L-1:]) # Creating trajectory matrix
+        eigenValues, eigenVectors = eigh(np.matmul(X_train, X_train.T))
+        idx = eigenValues.argsort()[::-1]
+        eigenValues = eigenValues[idx]
+        eigenVectors = eigenVectors[:,idx]
 
-        r = 1
-        # Extracted Training signals
-        U, Sigma, V = np.linalg.svd(self.X_train)
+        r = 1 # Statistical dimension decided as per scree plot
+        U, Sigma, V = np.linalg.svd(X_train)
         V = V.T
-        # d = np.linalg.matrix_rank(self.X_train)
         X_elem = np.array( [Sigma[i] * np.outer(U[:,i], V[:,i]) for i in range(0,r)] )
         X_train_extracted = X_elem.sum(axis=0)
-        # X_train_extracted_data = np.asarray(list(X_train_extracted[:,0]) + list(X_train_extracted[:,-1]))
 
-        U = eigenVectors[:,:r] # r as statistical dimension
+        U = eigenVectors[:,:r] 
         UT = U.T
         pX = np.matmul(UT,X_train_extracted)
         centroid = np.mean(pX, axis=1)
@@ -45,29 +42,18 @@ class ObluAnalytics():
 
         # Calculating the departure threshold in signal subspace using centroid and UT
 
-        #For training phase
-        # Xtrg = hankel(self.df[:L], self.df[L-1:])
-        # pXtrg = np.matmul(UT,Xtrg)
-        # dtrg_matrix = centroid - pXtrg
-        # dtrg_scores = np.linalg.norm(dtrg_matrix, axis=0, ord=2)
-
-        # For Validation phase and threshold calculation
-        Xt = hankel(self.df[:L],self.df[L-1:])
-        print(Xt.shape)
-
+        Xt = hankel(X_train_data[:L],X_train_data[L-1:])
         pXt = np.matmul(UT,Xt)
-        print(pXt.shape)
         dt_matrix = centroid - pXt
         dt_scores = np.linalg.norm(dt_matrix, axis=0, ord=2)
-        # d_scores = np.asarray([np.matmul(d_matrix[:,i].T, d_matrix[:,i]) for i in range(d_matrix.shape[1])])
-        dt_theta = np.max(dt_scores)
-        print(dt_scores)
-        return UT, centroid, dt_theta
+        theta = np.max(dt_scores)
+        return UT, centroid, theta
 
-    def getScore(self, UT, centroid, threshold, df):
-        # print(df.shape)
-        self.pca = PCA(n_components = 1)
-        lag_vector =  self.pca.fit_transform(df)
+    def getScore(self, UT, centroid, x, y):
+        x, y = np.array(x, dtype='float64'), np.array(y, dtype='float64')
+        stream = [np.sum(z)/2 for z in list(zip(x,y))]
+        stream = np.array(stream, dtype='float64')
+        lag_vector = stream[:,np.newaxis]
         projected_lag_vector = np.matmul(UT, lag_vector)    
         dist = centroid - projected_lag_vector
         score = np.linalg.norm(dist, ord=2)
