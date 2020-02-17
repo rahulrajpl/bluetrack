@@ -47,13 +47,15 @@ external_stylesheets = [
     }
 ]
 
+# Variable for storing Departure Score from Analytics
+S = deque(maxlen=100)
+S.append(random.uniform(10,15))
+
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div(
     style={'backgroundColor': '#111111'},
     children=[
-
-    
 
     html.Div(
         className="app-header",
@@ -114,14 +116,31 @@ app.layout = html.Div(
         html.Div([
             # html.H3('Column 2'),
             # dcc.Graph(id='g2', figure={'data': [{'y': [1, 2, 3]}]})
-            html.P('Analytics here. Coming soon', className='header-analytics')
+            html.P('Analytics here. Coming soon', className='header-analytics'),
+            dcc.Graph(id='app-analytics', animate=True),
+            dcc.Interval(id='analytics-update',interval=interval, n_intervals=0)
         ], className="six columns"),
     ], className="row"),
     #------two columns divs end------------
-    
-    
     ]
 )
+
+@app.callback(Output('app-analytics', 'figure'),
+        [Input('analytics-update', 'n_intervals')])
+def update_analytics(n):
+    global S
+    S.append(S[-1]+(random.uniform(-5,5)))
+    data = go.Scatter(
+        x = list(S),
+        # y = list(Y),
+        name = 'Scatter',
+        mode = 'lines+markers'
+    )
+    return {'data':[data],
+            'layout': go.Layout(xaxis=dict(range=[1, 100]),
+                                yaxis=dict(range=[1, 100])
+                                )
+            }
 
 @app.callback(Output('app-plotid', 'style'), 
         [Input('rotate-slider', 'value')])
@@ -150,7 +169,7 @@ def update_graph(n):
     #-----------------------------------------------------
 
     #-----------------------------------------------------
-    # For simulated real-time plot
+    # For simulating data saved in real-time
     if not file=="":
         data = file.readline().split(',')
         new_X, new_Y = data[1], data[2]
