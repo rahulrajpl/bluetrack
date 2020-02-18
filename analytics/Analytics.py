@@ -11,8 +11,8 @@ from sklearn.decomposition import PCA
 from scipy.linalg import hankel, eigh
 
 class ObluAnalytics():
-    def __init__(self):
-        pass
+    def __init__(self, lag_vector_length=50):
+        self.lag_vector_length = lag_vector_length
 
     def getThresholdScore(self, data_path='../sensor/GetData/steps.txt'):
 
@@ -20,8 +20,8 @@ class ObluAnalytics():
         X_train_data = (df[1]+df[2])/2
         
         N = len(X_train_data)
-        L = 15
-        
+        L = self.lag_vector_length
+        print(L)
         X_train = hankel(X_train_data[:L],X_train_data[L-1:]) # Creating trajectory matrix
         eigenValues, eigenVectors = eigh(np.matmul(X_train, X_train.T))
         idx = eigenValues.argsort()[::-1]
@@ -57,6 +57,7 @@ class ObluAnalytics():
         projected_lag_vector = np.matmul(UT, lag_vector)    
         dist = centroid - projected_lag_vector
         score = np.linalg.norm(dist, ord=2)
+        print(score)
         return score    
 
 

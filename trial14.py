@@ -28,9 +28,10 @@ file.readline()
 
 img = Image.open('docs/rm3_1.png')
 
-X = deque(maxlen=15)
-Y = deque(maxlen=15)
-counter = 0
+max_trail_limit = 15
+X = deque(maxlen=max_trail_limit)
+Y = deque(maxlen=max_trail_limit)
+# counter = 0
 interval = 1000 # Timer for updating the graph in msec
 
 #Initial data
@@ -49,13 +50,13 @@ external_stylesheets = [
 ]
 
 # Variable for storing Departure Score from Analytics
-S = deque(maxlen=25)
+S = deque(maxlen=max_trail_limit)
 S.append(5)
 # Variable for Time step
-T = deque(maxlen=25)
+T = deque(maxlen=max_trail_limit)
 T.append(1)
 # Object for analytics
-obj = ObluAnalytics()
+obj = ObluAnalytics(lag_vector_length=max_trail_limit)
 UT, centroid, theta = obj.getThresholdScore('analytics/steps_train.txt')
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
@@ -97,7 +98,7 @@ app.layout = html.Div(
                     config={
                         'autosizable':True,
                         'scrollZoom':True,
-                        'displayModeBar':'hover',    
+                        'displayModeBar':False,    
                     }
                     )
                 ],
@@ -124,7 +125,7 @@ app.layout = html.Div(
             # html.H3('Column 2'),
             # dcc.Graph(id='g2', figure={'data': [{'y': [1, 2, 3]}]})
             # html.P('Analytics here. Coming soon', className='header-analytics'),
-            dcc.Graph(id='app-analytics', animate=False),
+            dcc.Graph(id='app-analytics', animate=True),
             dcc.Interval(id='analytics-update',interval=interval, n_intervals=0)
         ], className="six columns"),
     ], className="row"),
@@ -135,7 +136,7 @@ app.layout = html.Div(
 @app.callback(Output('app-analytics', 'figure'),
         [Input('analytics-update', 'n_intervals')])
 def update_analytics(n):
-    global S, obj, UT, centroid, theta
+    global S, obj, UT, centroid, theta, max_trail_limit
     global X
     global Y
     # S.append(S[-1]+(random.uniform(-.5,.5)))
@@ -143,7 +144,7 @@ def update_analytics(n):
     # print([pd.DataFrame(x) for x in zip(list(X),list(Y))])
     # print(pd.DataFrame([sum(x)/2 for x in zip(list(X), list(Y))]))
     # print('UT={}, centroid={}, theta={}'.format(UT, centroid, theta))
-    if len(T)>20:
+    if len(T)>=max_trail_limit:
         
         # stream = [sum(x)/2 for x in list(zip(list(X),list(Y)))]
         # df = pd.DataFrame(list(X))
@@ -173,6 +174,7 @@ def update_analytics(n):
                     yaxis=dict(range=[0,100]),
                     template='plotly_dark',
                     uirevision='analytics-update',
+                    
                     
         )
     
@@ -268,6 +270,7 @@ def update_graph(n):
     fig.update_xaxes(showticklabels=False, zeroline=False)
     fig.update_yaxes(showticklabels=False, zeroline=False)
     fig.update_layout(xaxis_showgrid=False, yaxis_showgrid=False)
+    fig.update_layout(dragmode='pan')
     return fig
 
 if __name__=='__main__':
