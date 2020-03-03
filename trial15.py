@@ -150,7 +150,7 @@ def update_analytics(n):
         # df = pd.DataFrame(list(X))
         # df = df[0] / 2
         score = obj.getScore(UT, centroid, X, Y )
-        print(score)
+        # print(score)
         S.append(score)
 
     data = go.Scatter(
@@ -228,6 +228,7 @@ def update_graph(n):
     # For simulating data saved in real-time
     if not file=="":
         data = file.readline().split(',')
+        print(data)
         new_X, new_Y = data[1], data[2]
     else:
         file.seek(0,0)

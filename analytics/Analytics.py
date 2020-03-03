@@ -57,7 +57,7 @@ class ObluAnalytics():
         projected_lag_vector = np.matmul(UT, lag_vector)    
         dist = centroid - projected_lag_vector
         score = np.linalg.norm(dist, ord=2)
-        print(score)
+        # print(score)
         return score    
 
 
