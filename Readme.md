@@ -1,8 +1,10 @@
 ### BlueTrack
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rahulrajpl/bluetrack/master)
+
 Present Target: Dynamic realtime plotting of sensor data from OBLU device to a web based GUI using plotly/dash 
 
-Binder: https://notebooks.gesis.org/binder/jupyter/user/rahulrajpl-bluetrack-9zq11e4r/tree
+Binder: https://mybinder.org/v2/gh/rahulrajpl/bluetrack/master
 
 Stage 1: (2D live plotting) 
 
