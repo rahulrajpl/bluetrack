@@ -57,7 +57,7 @@ T = deque(maxlen=max_trail_limit)
 T.append(1)
 # Object for analytics
 obj = ObluAnalytics(lag_vector_length=max_trail_limit)
-UT, centroid, theta = obj.getThresholdScore('analytics/steps_train.txt')
+UT, centroid, theta = obj.get_threshold_score('analytics/steps_train.txt')
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
@@ -149,7 +149,7 @@ def update_analytics(n):
         # stream = [sum(x)/2 for x in list(zip(list(X),list(Y)))]
         # df = pd.DataFrame(list(X))
         # df = df[0] / 2
-        score = obj.getScore(UT, centroid, X, Y )
+        score = obj.get_score(UT, centroid, X, Y)
         print(score)
         S.append(score)
 

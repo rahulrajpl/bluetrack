@@ -16,40 +16,39 @@ class ObluAnalytics:
 
     def get_threshold_score(self, data_path='../sensor/GetData/steps.txt'):
         df = pd.read_csv(data_path, skiprows=1, header=None, usecols=[1, 2])
-        x_train_data = (df[1] + df[2]) / 2
+        X_train_data = (df[1] + df[2]) / 2
 
-        # N = len(x_train_data)
+        N = len(X_train_data)
         L = self.lag_vector_length
         print(L)
-        x_train = hankel(x_train_data[:L], x_train_data[L - 1:])  # Creating trajectory matrix
-        eigen_values, eigen_vectors = eigh(np.matmul(x_train, x_train.T))
-        idx = eigen_values.argsort()[::-1]
-        # eigen_values = eigen_values[idx]
-        eigen_vectors = eigen_vectors[:, idx]
+        X_train = hankel(X_train_data[:L], X_train_data[L - 1:])  # Creating trajectory matrix
+        eigenValues, eigenVectors = eigh(np.matmul(X_train, X_train.T))
+        idx = eigenValues.argsort()[::-1]
+        eigenValues = eigenValues[idx]
+        eigenVectors = eigenVectors[:, idx]
 
         r = 1  # Statistical dimension decided as per scree plot
-        U, sigma, V = np.linalg.svd(x_train)
+        U, Sigma, V = np.linalg.svd(X_train)
         V = V.T
-        x_elem = np.array([sigma[i] * np.outer(U[:, i], V[:, i]) for i in range(0, r)])
-        x_train_extracted = x_elem.sum(axis=0)
+        X_elem = np.array([Sigma[i] * np.outer(U[:, i], V[:, i]) for i in range(0, r)])
+        X_train_extracted = X_elem.sum(axis=0)
 
-        U = eigen_vectors[:, :r]
+        U = eigenVectors[:, :r]
         UT = U.T
-        pX = np.matmul(UT, x_train_extracted)
+        pX = np.matmul(UT, X_train_extracted)
         centroid = np.mean(pX, axis=1)
         centroid = centroid[:, np.newaxis]
 
         # Calculating the departure threshold in signal subspace using centroid and UT
 
-        xt = hankel(x_train_data[:L], x_train_data[L - 1:])
-        pxt = np.matmul(UT, xt)
-        dt_matrix = centroid - pxt
+        Xt = hankel(X_train_data[:L], X_train_data[L - 1:])
+        pXt = np.matmul(UT, Xt)
+        dt_matrix = centroid - pXt
         dt_scores = np.linalg.norm(dt_matrix, axis=0, ord=2)
         theta = np.max(dt_scores)
         return UT, centroid, theta
 
-    @staticmethod
-    def get_score(UT, centroid, x, y):
+    def get_score(self, UT, centroid, x, y):
         x, y = np.array(x, dtype='float64'), np.array(y, dtype='float64')
         stream = [np.sum(z) / 2 for z in list(zip(x, y))]
         stream = np.array(stream, dtype='float64')

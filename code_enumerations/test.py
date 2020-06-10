@@ -25,7 +25,7 @@ def simulate_data():
 Y = deque(maxlen=200)
 oa = ObluAnalytics()
 
-UT, centroid, threshold = oa.getThresholdScore(data_path='sensor/GetData/steps_train.txt')
+UT, centroid, threshold = oa.get_threshold_score(data_path='sensor/GetData/steps_train.txt')
 
 
 print(threshold)
@@ -39,7 +39,7 @@ while True:
     Y.append(simulate_data())
     if len(Y) >=200:
         sleep(1)
-        print(oa.getScore(UT, centroid, threshold, pd.DataFrame(Y)))
+        print(oa.get_score(UT, centroid, threshold, pd.DataFrame(Y)))
 
 # UT, centroid, threshold = oa.getThresholdScore(data_path=test_path)
 
